@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -324,5 +324,60 @@ public class ModulusManipulation : MonoBehaviour
             bombModule.HandleStrike();
             Debug.LogFormat(@"[Modulus Manipulation #{0}] Submission was incorrect. Strike occurred.", moduleId);
         }
+    }
+    public string TwitchHelpMessage = "Use '!{0} submit 1 2 3' to submit number 1, 2 and 3!";
+    public IEnumerator ProcessTwitchCommand(string command)
+    {
+        string commfinal=command.Replace("submit ", "");
+		string[] digitstring = commfinal.Split(' ');
+		int tried;
+        for(int p=0; p<digitstring.Count(); p++){
+        if(int.TryParse(digitstring[p], out tried)){
+            tried=int.Parse(digitstring[p]);
+            if(tried>=0){
+                if(tried<=9){
+                    if(p==0){
+                        while(int.Parse(leftText.text)!=tried){
+                            yield return null;
+                            yield return upButtonLeft;
+                            yield return upButtonLeft;
+                        }
+                    }
+                    if(p==1){
+                        while(int.Parse(middleText.text)!=tried){
+                            yield return null;
+                            yield return upButtonMiddle;
+                            yield return upButtonMiddle;
+                        }
+                    }
+                    if(p==2){
+                        while(int.Parse(rightText.text)!=tried){
+                            yield return null;
+                            yield return upButtonRight;
+                            yield return upButtonRight;
+                        }
+                    }
+            }
+            else{
+               yield return null;
+			    yield return "sendtochaterror Number too big!";
+			    yield break; 
+            }
+            }
+            else{
+                yield return null;
+				yield return "sendtochaterror Number too small!";
+				yield break;
+            }
+        }
+        else{
+            yield return null;
+			yield return "sendtochaterror Digit not valid.";
+			yield break;
+        }
+    }
+    yield return null;
+    yield return submitButton;
+    yield return submitButton;
     }
 }
